@@ -15,13 +15,30 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     // - https://docs.rs/ratatui/latest/ratatui/widgets/index.html
     // - https://github.com/ratatui-org/ratatui/tree/master/examples
     let chunks = Layout::default()
-        .direction(Direction::Vertical)
+        .direction(Direction::Horizontal)
         .constraints([
-            Constraint::Length(10),
-            Constraint::Min(10),
-            Constraint::Length(10),
+            Constraint::Percentage(20),
+            Constraint::Percentage(60),
+            Constraint::Percentage(20),
         ])
         .split(frame.size());
+
+    let users = Paragraph::new(format!(
+        "To add a user press A .\n\
+        Type their name, and press A \n\
+        again to save. \n\n\n
+        Users: {} \n",
+        "Ryan"
+    ))
+    .block(
+        Block::default()
+            .title("Members of the Mob ")
+            .title_alignment(Alignment::Center)
+            .borders(Borders::ALL)
+            .border_type(BorderType::Rounded),
+    );
+
+    frame.render_widget(users, chunks[0]);
 
     let paragraph = Paragraph::new(format!(
         "Welcome to mobtime-cli .\n\
@@ -39,5 +56,13 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     )
     .alignment(Alignment::Center);
 
-    frame.render_widget(paragraph, chunks[0]);
+    frame.render_widget(paragraph, chunks[1]);
+
+    let goals = Block::default()
+        .title("Goals")
+        .title_alignment(Alignment::Center)
+        .borders(Borders::ALL)
+        .border_type(BorderType::Rounded);
+
+    frame.render_widget(goals, chunks[2]);
 }
