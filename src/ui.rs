@@ -2,9 +2,10 @@ use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Style},
     text::{Line, Span, Text},
-    widgets::{Block, BorderType, Borders, Clear, List, ListItem, Paragraph, Wrap},
+    widgets::{Block, BorderType, Borders, Clear, List, ListItem, Padding, Paragraph, Wrap},
     Frame,
 };
+use tui_textarea::TextArea;
 
 use crate::app::App;
 
@@ -14,7 +15,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     // See the following resources:
     // - https://docs.rs/ratatui/latest/ratatui/widgets/index.html
     // - https://github.com/ratatui-org/ratatui/tree/master/examples
-    let chunks = Layout::default()
+    let layout = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([
             Constraint::Percentage(20),
@@ -22,6 +23,11 @@ pub fn render(app: &mut App, frame: &mut Frame) {
             Constraint::Percentage(20),
         ])
         .split(frame.size());
+
+    let left_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(vec![Constraint::Percentage(75), Constraint::Percentage(25)])
+        .split(layout[0]);
 
     let users = Paragraph::new(format!(
         "To add a user press A .\n\
@@ -38,7 +44,18 @@ pub fn render(app: &mut App, frame: &mut Frame) {
             .border_type(BorderType::Rounded),
     );
 
-    frame.render_widget(users, chunks[0]);
+    frame.render_widget(users, left_layout[0]);
+
+    let mut textarea = tui_textarea::TextArea::default();
+    textarea.set_block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_type(BorderType::Double)
+            .title("Enter prompt")
+            .padding(Padding::new(1, 1, 0, 0)),
+    );
+
+    frame.render_widget(textarea.widget(), left_layout[1]);
 
     let paragraph = Paragraph::new(format!(
         "Welcome to mobtime-cli .\n\
@@ -56,7 +73,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     )
     .alignment(Alignment::Center);
 
-    frame.render_widget(paragraph, chunks[1]);
+    frame.render_widget(paragraph, layout[1]);
 
     let goals = Block::default()
         .title("Goals")
@@ -64,5 +81,5 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded);
 
-    frame.render_widget(goals, chunks[2]);
+    frame.render_widget(goals, layout[2]);
 }
