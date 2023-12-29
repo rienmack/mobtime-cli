@@ -1,7 +1,14 @@
 use std::error;
+use tui_input::Input;
 
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
+
+#[derive(Debug)]
+pub enum InputMode {
+    Normal,
+    Editing,
+}
 
 /// Application.
 #[derive(Debug)]
@@ -10,6 +17,10 @@ pub struct App {
     pub running: bool,
     /// timer
     pub timer: u8,
+    pub user_input: Input,
+    pub goal_input: String,
+    pub input_mode: InputMode,
+    pub users: Vec<String>,
 }
 
 impl Default for App {
@@ -17,6 +28,10 @@ impl Default for App {
         Self {
             running: true,
             timer: 0,
+            user_input: Input::default(),
+            goal_input: String::from(""),
+            input_mode: InputMode::Normal,
+            users: vec![],
         }
     }
 }

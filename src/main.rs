@@ -2,18 +2,18 @@ use mobtime_cli::app::{App, AppResult};
 use mobtime_cli::event::{Event, EventHandler};
 use mobtime_cli::handler::handle_key_events;
 use mobtime_cli::tui::Tui;
-use std::io;
 use ratatui::backend::CrosstermBackend;
 use ratatui::Terminal;
+use std::io;
 
 fn main() -> AppResult<()> {
     // Create an application.
     let mut app = App::new();
 
     // Initialize the terminal user interface.
-    let backend = CrosstermBackend::new(io::stderr());
+    let backend = CrosstermBackend::new(io::stdout());
     let terminal = Terminal::new(backend)?;
-    let events = EventHandler::new(250);
+    let events = EventHandler::new(100);
     let mut tui = Tui::new(terminal, events);
     tui.init()?;
 
