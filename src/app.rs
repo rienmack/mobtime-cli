@@ -17,10 +17,13 @@ pub struct App {
     pub running: bool,
     /// timer
     pub timer: u8,
+    /// users
     pub user_input: Input,
-    pub goal_input: String,
-    pub input_mode: InputMode,
     pub users: Vec<String>,
+    /// goals
+    pub goal_input: String,
+    /// input mode
+    pub input_mode: InputMode,
 }
 
 impl Default for App {
@@ -29,9 +32,9 @@ impl Default for App {
             running: true,
             timer: 0,
             user_input: Input::default(),
+            users: vec![],
             goal_input: String::from(""),
             input_mode: InputMode::Normal,
-            users: vec![],
         }
     }
 }
