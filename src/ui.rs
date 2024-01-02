@@ -43,33 +43,6 @@ pub fn render(app: &mut App, frame: &mut Frame) {
 }
 
 fn user_section(app: &mut App, frame: &mut Frame<'_>, left_layout: std::rc::Rc<[Rect]>) {
-    let (msg, style) = match app.input_mode {
-        InputMode::Normal => (
-            vec![
-                Span::raw("Press "),
-                Span::styled("q", Style::default().add_modifier(Modifier::BOLD)),
-                Span::raw(" to exit, "),
-                Span::styled("e", Style::default().add_modifier(Modifier::BOLD)),
-                Span::raw(" to start editing."),
-            ],
-            Style::default().add_modifier(Modifier::RAPID_BLINK),
-        ),
-        InputMode::Editing => (
-            vec![
-                Span::raw("Press "),
-                Span::styled("Esc", Style::default().add_modifier(Modifier::BOLD)),
-                Span::raw(" to stop editing, "),
-                Span::styled("Enter", Style::default().add_modifier(Modifier::BOLD)),
-                Span::raw(" to record the message"),
-            ],
-            Style::default(),
-        ),
-    };
-    let mut text = Text::from(Line::from(msg));
-    text.patch_style(style);
-    let help_message = Paragraph::new(text);
-    frame.render_widget(help_message, left_layout[1]);
-
     let width = left_layout[0].width.max(3) - 3; // keep 2 for borders and 1 for cursor
 
     let scroll = app.user_input.visual_scroll(width as usize);
