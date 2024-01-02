@@ -28,18 +28,19 @@ pub fn render(app: &mut App, frame: &mut Frame) {
 
     let left_layout = Layout::default()
         .direction(Direction::Vertical)
-        .constraints(vec![
-            Constraint::Percentage(0),
-            Constraint::Percentage(15),
-            Constraint::Percentage(85),
-        ])
+        .constraints(vec![Constraint::Percentage(15), Constraint::Percentage(85)])
         .split(layout[0]);
+
+    let right_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(vec![Constraint::Percentage(15), Constraint::Percentage(85)])
+        .split(layout[2]);
 
     user_section(app, frame, left_layout);
 
     timer_section(app, frame, &layout);
 
-    goal_section(frame, layout);
+    goal_section(frame, right_layout);
 }
 
 fn user_section(app: &mut App, frame: &mut Frame<'_>, left_layout: std::rc::Rc<[Rect]>) {
@@ -53,7 +54,7 @@ fn user_section(app: &mut App, frame: &mut Frame<'_>, left_layout: std::rc::Rc<[
         })
         .scroll((0, scroll as u16))
         .block(Block::default().borders(Borders::ALL).title("Input"));
-    frame.render_widget(input, left_layout[1]);
+    frame.render_widget(input, left_layout[0]);
     match app.input_mode {
         InputMode::Normal =>
             // Hide the cursor. `Frame` does this by default, so we don't need to do anything here
@@ -63,11 +64,11 @@ fn user_section(app: &mut App, frame: &mut Frame<'_>, left_layout: std::rc::Rc<[
             // Make the cursor visible and ask tui-rs to put it at the specified coordinates after rendering
             frame.set_cursor(
                 // Put cursor past the end of the input text
-                left_layout[1].x
+                left_layout[0].x
                     + ((app.user_input.visual_cursor()).max(scroll) - scroll) as u16
                     + 1,
                 // Move one line down, from the border to the input line
-                left_layout[1].y + 1,
+                left_layout[0].y + 1,
             )
         }
     }
@@ -82,8 +83,7 @@ fn user_section(app: &mut App, frame: &mut Frame<'_>, left_layout: std::rc::Rc<[
         })
         .collect();
     let messages = List::new(messages).block(Block::default().borders(Borders::ALL).title("Users"));
-    frame.render_widget(messages, left_layout[2]);
-    // frame.render_widget(.widget(), left_layout[1]);
+    frame.render_widget(messages, left_layout[1]);
 }
 
 fn timer_section(app: &mut App, frame: &mut Frame<'_>, layout: &std::rc::Rc<[Rect]>) {
@@ -106,21 +106,20 @@ fn timer_section(app: &mut App, frame: &mut Frame<'_>, layout: &std::rc::Rc<[Rec
     frame.render_widget(paragraph, layout[1]);
 }
 
-fn goal_section(frame: &mut Frame<'_>, layout: std::rc::Rc<[Rect]>) {
+fn goal_section(frame: &mut Frame<'_>, right_layout: std::rc::Rc<[Rect]>) {
     let goals = Block::default()
         .title("Goals")
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded);
+    frame.render_widget(goals, right_layout[1]);
 
-    // let mut textarea = tui_textarea::TextArea::default();
-    // textarea.set_block(
-    //     Block::default()
-    //         .borders(Borders::ALL)
-    //         .border_type(BorderType::Double)
-    //         .title("Enter name")
-    //         .padding(Padding::new(1, 1, 0, 0)),
-    // );
-
-    frame.render_widget(goals, layout[2]);
+    let mut textarea = tui_textarea::TextArea::default();
+    textarea.set_block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_type(BorderType::Double)
+            .title("Enter name")
+            .padding(Padding::new(1, 1, 0, 0)),
+    );
 }
