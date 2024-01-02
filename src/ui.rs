@@ -40,7 +40,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
 
     timer_section(app, frame, &layout);
 
-    goal_section(frame, right_layout);
+    goal_section(app, frame, right_layout);
 }
 
 fn user_section(app: &mut App, frame: &mut Frame<'_>, left_layout: std::rc::Rc<[Rect]>) {
@@ -106,7 +106,7 @@ fn timer_section(app: &mut App, frame: &mut Frame<'_>, layout: &std::rc::Rc<[Rec
     frame.render_widget(paragraph, layout[1]);
 }
 
-fn goal_section(frame: &mut Frame<'_>, right_layout: std::rc::Rc<[Rect]>) {
+fn goal_section(app: &mut App, frame: &mut Frame<'_>, right_layout: std::rc::Rc<[Rect]>) {
     let goals = Block::default()
         .title("Goals")
         .title_alignment(Alignment::Center)
@@ -119,6 +119,10 @@ fn goal_section(frame: &mut Frame<'_>, right_layout: std::rc::Rc<[Rect]>) {
         Block::default()
             .borders(Borders::ALL)
             .border_type(BorderType::Double)
+            .style(match app.input_mode {
+                InputMode::Normal => Style::default(),
+                InputMode::Editing => Style::default().fg(Color::Yellow),
+            })
             .title("Enter goals")
             .padding(Padding::new(1, 1, 0, 0)),
     );
