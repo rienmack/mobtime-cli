@@ -1,5 +1,3 @@
-use std::io;
-
 use crate::app::{App, AppResult, InputMode};
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
 use tui_input::backend::crossterm::EventHandler;

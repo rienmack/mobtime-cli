@@ -1,7 +1,7 @@
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
-    text::{Line, Span, Text},
+    text::{self, Line, Span, Text},
     widgets::{Block, BorderType, Borders, Clear, List, ListItem, Padding, Paragraph, Wrap},
     Frame,
 };
@@ -19,8 +19,8 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         .constraints(
             [
                 Constraint::Percentage(25),
-                Constraint::Percentage(55),
-                Constraint::Percentage(20),
+                Constraint::Percentage(45),
+                Constraint::Percentage(30),
             ]
             .as_ref(),
         )
@@ -33,7 +33,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
 
     let right_layout = Layout::default()
         .direction(Direction::Vertical)
-        .constraints(vec![Constraint::Percentage(15), Constraint::Percentage(85)])
+        .constraints(vec![Constraint::Percentage(20), Constraint::Percentage(80)])
         .split(layout[2]);
 
     user_section(app, frame, left_layout);
@@ -119,7 +119,9 @@ fn goal_section(frame: &mut Frame<'_>, right_layout: std::rc::Rc<[Rect]>) {
         Block::default()
             .borders(Borders::ALL)
             .border_type(BorderType::Double)
-            .title("Enter name")
+            .title("Enter goals")
             .padding(Padding::new(1, 1, 0, 0)),
     );
+
+    frame.render_widget(textarea.widget(), right_layout[0]);
 }
