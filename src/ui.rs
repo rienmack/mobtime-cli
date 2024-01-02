@@ -118,7 +118,7 @@ fn goal_section(app: &mut App, frame: &mut Frame<'_>, right_layout: std::rc::Rc<
     textarea.set_block(
         Block::default()
             .borders(Borders::ALL)
-            .border_type(BorderType::Double)
+            .border_type(BorderType::Rounded)
             .style(match app.input_mode {
                 InputMode::Normal => Style::default(),
                 InputMode::Editing => Style::default().fg(Color::Yellow),
